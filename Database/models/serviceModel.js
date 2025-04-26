@@ -1,0 +1,35 @@
+const mongoose = require("mongoose");
+
+const serviceSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  fathersname: {
+    type: String,
+  },
+  Date: {
+    type:String,
+  },
+  number: {
+    type:Number,
+  },
+  complaint: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+  criminalname: {
+    type: String,
+  },
+  visitingreason: {
+    type: String,
+  },
+  visitingtime: {
+    type: String,
+  },
+});
+
+const services=mongoose.model('services',serviceSchema)
+module.exports=services

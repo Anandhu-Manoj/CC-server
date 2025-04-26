@@ -1,14 +1,21 @@
 const mongoose=require('mongoose')
+const { any } = require('../../Middleware/multerMiddleWare')
 const userSchema=new mongoose.Schema({
     username:{
         type:String,
         required:true
+        
+    },
+    userType:{
+        type:String,
+        required:true
+
     },
     password:{
         type:String,
         required:true
     },
-    img:{
+    adhaarImg:{
         type:String,
         required:true
     },

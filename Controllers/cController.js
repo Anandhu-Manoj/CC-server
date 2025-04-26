@@ -1,7 +1,11 @@
+const { request } = require("express");
+const jwt=require('jsonwebtoken')
+
 const users = require("../Database/models/userModel");
 
 exports.regCivilianController = async (req, res) => {
-  const { username, password, img, email, address, aadharNo } = req.body;
+  const { username, password, email, address, aadharNo, userType } = req.body;
+  const adhaarImg = req.file.filename;
   try {
     const existingUser = await users.findOne({ aadharNo });
     if (existingUser) {
@@ -10,15 +14,38 @@ exports.regCivilianController = async (req, res) => {
       const newUser = new users({
         username,
         password,
-        img,
-        email,
+        adhaarImg,
         address,
         aadharNo,
+        userType,
+        email,
       });
       await newUser.save();
-      res.status(201).json(newUser
-        
-      )
+      res.status(201).json(newUser);
     }
-  } catch (error) {res.status(500).json(error)}
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+ exports.civilianLogin = async(req, res) => {
+  try {
+    const { email, password, aadharNo } = req.body;
+
+  const existingUser =await users.findOne({ email, password, aadharNo });
+
+  if (existingUser) {
+    const token=jwt.sign({userId:existingUser._id},process.env.JWTSECRETKEY)
+    res.status(200).json({user:existingUser,token:token});
+  }else{
+    res.status(400).json('add correct credentials')
+  }
+    
+  } catch (error) {
+    console.log('login error')
+    res.status(500).json(error)
+    
+  }
+  
 };
