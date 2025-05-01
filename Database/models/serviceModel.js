@@ -4,6 +4,7 @@ const serviceSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    
   },
   fathersname: {
     type: String,
@@ -22,6 +23,10 @@ const serviceSchema = new mongoose.Schema({
   },
   criminalname: {
     type: String,
+  },
+  relationship:{
+    type:String
+
   },
   visitingreason: {
     type: String,
