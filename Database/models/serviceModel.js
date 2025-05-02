@@ -34,6 +34,11 @@ const serviceSchema = new mongoose.Schema({
   visitingtime: {
     type: String,
   },
+  serviceType:{
+    type:String,
+    required:true
+
+  }
 });
 
 const services=mongoose.model('services',serviceSchema)

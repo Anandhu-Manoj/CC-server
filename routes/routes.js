@@ -23,6 +23,9 @@ router.post(
   cServices.serviceController
 );
 
+//getAllservices
+router.get('/getServices',cServices.getServices)
+
 
 //adminlogin
 router.post("/adminLogin",officerController.adminController)
@@ -42,4 +45,15 @@ router.delete('/officers/:id/delete',officerController.deleteOfficer)
 //adding criminals
 router.post('/addCriminals',multerMiddleWare.single('criminalimage'),criminalController.AddCriminalController)
 
+
+//getAllcriminals
+
+router.get('/getAllCriminals',criminalController.getAllCriminalDetails)
+
+
+//deletCriminals
+router.delete('/criminal/:id/delete',criminalController.deleteCriminals)
+
+//deleteservices
+router.delete('/Services/:id/delete',cServices.deleteService)
 
