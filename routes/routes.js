@@ -4,9 +4,11 @@ const cController = require("../Controllers/cController");
 const multerMiddleWare = require("../Middleware/multerMiddleWare");
 const cServices = require("../Controllers/cServiceController");
 const serviceMulterMiddleWare = require("../Middleware/serviceMulterMiddleWare");
-const officerController=require('../Controllers/OfficersController')
-const criminalController=require('../Controllers/criminalControllers')
-
+const officerController = require("../Controllers/OfficersController");
+const criminalController = require("../Controllers/criminalControllers");
+const auth = require("../Middleware/jwtMiddleware");
+const leaveController=require('../Controllers/lController')
+const PoliceServices=require('../Controllers/pServiceController')
 const router = express.Router();
 
 router.post(
@@ -24,36 +26,61 @@ router.post(
 );
 
 //getAllservices
-router.get('/getServices',cServices.getServices)
-
+router.get("/getServices", auth, cServices.getServices);
 
 //adminlogin
-router.post("/adminLogin",officerController.adminController)
-
-module.exports = router;
+router.post("/adminLogin", officerController.adminController);
 
 //addingPoliceOfficer
-router.post("/addPolice",officerController.addPoliceOfficer)
+router.post("/addPolice", auth, officerController.addPoliceOfficer);
 
 //getofficersdata
-router.get("/getPolice",officerController.getOfficerDetails)
+router.get("/getPolice", auth, officerController.getOfficerDetails);
 
 //deleteOfficer
-router.delete('/officers/:id/delete',officerController.deleteOfficer)
-
+router.delete("/officers/:id/delete", auth, officerController.deleteOfficer);
 
 //adding criminals
-router.post('/addCriminals',multerMiddleWare.single('criminalimage'),criminalController.AddCriminalController)
-
+router.post(
+  "/addCriminals",
+  auth,
+  multerMiddleWare.single("criminalimage"),
+  criminalController.AddCriminalController
+);
 
 //getAllcriminals
 
-router.get('/getAllCriminals',criminalController.getAllCriminalDetails)
-
+router.get("/getAllCriminals", auth, criminalController.getAllCriminalDetails);
 
 //deletCriminals
-router.delete('/criminal/:id/delete',criminalController.deleteCriminals)
+router.delete("/criminal/:id/delete", auth, criminalController.deleteCriminals);
 
 //deleteservices
-router.delete('/Services/:id/delete',cServices.deleteService)
+router.delete("/Services/:id/delete", auth, cServices.deleteService);
 
+//getSpeceficofficer
+
+router.get("/getLoggedOfficer", auth, officerController.getSpeceficOfficer);
+
+
+//postLeaves
+router.post('/postLeaves',auth,leaveController.addLeave)
+
+//getLeaves
+router.get('/getAllLeaves',auth,leaveController.getLeaves)
+
+
+//adding police services
+router.post('/postPoliceServices',auth,PoliceServices.AddServices)
+
+//gettingPoliceServices
+router.get('/getPoliceServices',auth,PoliceServices.getPoliceServices)
+
+
+//notification for accepting serveces
+router.post('/acceptingPoliceServices',auth,officerController.onAcceptOfficerServices)
+
+
+
+
+module.exports = router;

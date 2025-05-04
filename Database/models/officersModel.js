@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { array } = require("../../Middleware/multerMiddleWare");
 
 const officersSchema = new mongoose.Schema({
   role: {
@@ -35,6 +36,10 @@ const officersSchema = new mongoose.Schema({
   serviceperiod: {
     type: Number,
   },
+  Notification:{
+    type:Array,
+    
+  }
 });
 const officers=mongoose.model('officers',officersSchema)
 module.exports=officers
