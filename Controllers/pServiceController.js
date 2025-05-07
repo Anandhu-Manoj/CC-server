@@ -14,6 +14,7 @@ exports.AddServices = async (req, res) => {
       details,
       userId
     });
+    console.log(newServices)
 
     await newServices.save();
     res.status(200).json(newServices);

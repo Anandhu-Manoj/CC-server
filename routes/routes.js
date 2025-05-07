@@ -80,6 +80,15 @@ router.get('/getPoliceServices',auth,PoliceServices.getPoliceServices)
 //notification for accepting serveces
 router.post('/acceptingPoliceServices',auth,officerController.onAcceptOfficerServices)
 
+//clearNotification
+router.patch('/ClearingPoliceServices',auth,officerController.ClearNotification)
+
+
+//editOfficer
+router.patch('/updateOfficer/:id',auth,officerController.editOfficer)
+
+
+
 
 
 
