@@ -11,7 +11,7 @@ exports.AddCriminalController = async (req, res) => {
     AdmittedDate,
     RelievingDate,
   } = req.body;
-  const criminalimage=req.file.filename
+  const criminalimage = req.file.filename;
 
   try {
     const existingCriminal = await criminals.findOne({ CNumber });
@@ -40,32 +40,58 @@ exports.AddCriminalController = async (req, res) => {
 
 //get all criminals
 exports.getAllCriminalDetails = async (req, res) => {
-  
   try {
     const allCriminals = await criminals.find();
-     res.status(200).json(allCriminals);
+    res.status(200).json(allCriminals);
   } catch (error) {
     res.status(500).json("server error");
-    console.log(error)
+    console.log(error);
   }
 };
 
-
-
 //deleteController
 
-
-exports.deleteCriminals=async(req,res)=>{
-
-  const id=req.params.id
+exports.deleteCriminals = async (req, res) => {
+  const id = req.params.id;
   try {
-    const deleteCriminalData=await criminals.findByIdAndDelete({_id:id})
-    res.status(200).json(deleteCriminalData)
-    
+    const deleteCriminalData = await criminals.findByIdAndDelete({ _id: id });
+    res.status(200).json(deleteCriminalData);
   } catch (error) {
-    res.status(500).json('server error')
-    console.log(error)
-    
+    res.status(500).json("server error");
+    console.log(error);
   }
+};
 
-}
+//edit criminals
+exports.editCriminals = async (req, res) => {
+  const {
+    criminalname,
+    criminalfathersName,
+    CriminalIdentificationMark,
+    CNumber,
+    TotalYearsofSentence,
+    AdmittedDate,
+    RelievingDate,
+  } = req.body;
+  
+
+  const userId = req.params.id;
+  try {
+    await criminals.findOneAndUpdate(
+      { _id: userId },
+      {
+        criminalname,
+        criminalfathersName,
+        CriminalIdentificationMark,
+        CNumber,
+        TotalYearsofSentence,
+        AdmittedDate,
+        RelievingDate,
+      }, { new: true }
+    );
+    res.status(200).json("success");
+  } catch (error) {
+    res.status(500).json({ message: "server error" });
+    console.log(error);
+  }
+};

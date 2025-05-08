@@ -5,6 +5,7 @@ const officers = require("../Database/models/officersModel");
 const PoliceServices = require("../Database/models/pServiceSchema");
 const jwt = require("jsonwebtoken");
 const pService = require("../Database/models/pServiceSchema");
+const services=require('../Database/models/serviceModel')
 
 exports.adminController = async (req, res) => {
   const { email, password } = req.body;
@@ -107,16 +108,18 @@ exports.getSpeceficOfficer = async (req, res) => {
 
 //onaccepting
 
-
 exports.onAcceptOfficerServices = async (req, res) => {
   const { serviceId, userId, serviceType, date } = req.body;
-  console.log(serviceId);
   const ServiceMessage = {
     id: Date.now(),
     message:
       serviceType == "Sports Club Booking"
-        ? `your service request for Sports Club Booking applied on ${date.toLocaleString('en-IN')}  is approved `
-        : `your service request for case details applied on ${date.toLocaleString('en-IN')}  is approved `,
+        ? `your service request for Sports Club Booking applied on ${date.toLocaleString(
+            "en-IN"
+          )}  is approved `
+        : `your service request for case details applied on ${date.toLocaleString(
+            "en-IN"
+          )}  is approved `,
   };
 
   try {
@@ -124,7 +127,7 @@ exports.onAcceptOfficerServices = async (req, res) => {
       { _id: userId },
       { $push: { Notification: ServiceMessage } }
     );
-    await pService.findOneAndDelete({_id:serviceId})
+    await pService.findOneAndDelete({ _id: serviceId });
     res.status(200).json("deleted successfully");
   } catch (error) {
     res.status(500).json("server error");
@@ -132,21 +135,19 @@ exports.onAcceptOfficerServices = async (req, res) => {
 };
 
 //clear notification
-exports.ClearNotification=async(req,res)=>{
-  const UserId=req.userId
+exports.ClearNotification = async (req, res) => {
+  const UserId = req.userId;
   try {
-    await officers.findOneAndUpdate({_id:UserId},{$set:{Notification:[]}})
-    res.status(200).json('deleted')
-
-    
+    await officers.findOneAndUpdate(
+      { _id: UserId },
+      { $set: { Notification: [] } }
+    );
+    res.status(200).json("deleted");
   } catch (error) {
-    res.status(500).json({message:"serror error"})
-    console.log(error)
-
-    
+    res.status(500).json({ message: "serror error" });
+    console.log(error);
   }
-
-}
+};
 
 //patchController
 exports.editOfficer = async (req, res) => {
@@ -183,5 +184,25 @@ exports.editOfficer = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
+  }
+};
+
+//view Assigned casses
+exports.assignedCasses = async (req, res) => {
+  const userId = req.params.id;
+
+  const { serviceId, link } = req.body;
+  try {
+    const ServiceMessage = {
+      id: Date.now(),
+      message:
+        "This case is assigned to your station check out the link for futher details and update the panel ASAP",
+      link: link,
+    };
+    await officers.findOneAndUpdate({_id:userId},{$push:{Notification:ServiceMessage}})
+    await services.findOneAndDelete({_id:serviceId})
+    res.status(200).json('success')
+  } catch (error) {
+    res.status(500).json("server error");
   }
 };

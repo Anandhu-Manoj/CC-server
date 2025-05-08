@@ -87,6 +87,14 @@ router.patch('/ClearingPoliceServices',auth,officerController.ClearNotification)
 //editOfficer
 router.patch('/updateOfficer/:id',auth,officerController.editOfficer)
 
+//editCriminals
+router.patch('/updateCriminals/:id',auth,multerMiddleWare.single("criminalimage"),criminalController.editCriminals)
+
+
+//assigningcasses
+router.patch('/asignCasses/:id',auth,officerController.assignedCasses)
+
+
 
 
 
