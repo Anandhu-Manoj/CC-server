@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const leaveSchema = new mongoose.Schema({
+
+  userId: {
+    type: String,
+    required: true,
+  },
   leaveType: {
     type: String,
     required: true,

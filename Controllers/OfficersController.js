@@ -1,11 +1,13 @@
 const express = require("express");
 const Officers = require("../Database/models/officersModel");
-const { findOne } = require("../Database/models/userModel");
 const officers = require("../Database/models/officersModel");
 const PoliceServices = require("../Database/models/pServiceSchema");
 const jwt = require("jsonwebtoken");
 const pService = require("../Database/models/pServiceSchema");
-const services=require('../Database/models/serviceModel')
+const services = require("../Database/models/serviceModel");
+const civilians = require("../Database/models/userModel");
+const users = require("../Database/models/userModel");
+const leaves = require("../Database/models/LeaveModel");
 
 exports.adminController = async (req, res) => {
   const { email, password } = req.body;
@@ -199,10 +201,118 @@ exports.assignedCasses = async (req, res) => {
         "This case is assigned to your station check out the link for futher details and update the panel ASAP",
       link: link,
     };
-    await officers.findOneAndUpdate({_id:userId},{$push:{Notification:ServiceMessage}})
-    await services.findOneAndDelete({_id:serviceId})
-    res.status(200).json('success')
+    await officers.findOneAndUpdate(
+      { _id: userId },
+      { $push: { Notification: ServiceMessage } }
+    );
+    await services.findOneAndDelete({ _id: serviceId });
+    res.status(200).json("success");
   } catch (error) {
     res.status(500).json("server error");
+  }
+};
+
+//dismissing case
+
+exports.dismissedCasses = async (req, res) => {
+  const { serviceId, userId } = req.body;
+
+  try {
+    const ServiceMessage = {
+      id: Date.now(),
+      message: "The case has been dismissed",
+    };
+    await civilians.findOneAndUpdate(
+      { _id: userId },
+      { $push: { Notification: ServiceMessage } }
+    );
+    await services.findOneAndDelete({ _id: serviceId });
+    res.status(200).json("success");
+  } catch (error) {
+    res.status(500).json("server error");
+  }
+};
+
+//onacceptserviceReq
+exports.onAcceptlocalServices = async (req, res) => {
+  const { serviceId, userId, serviceType, date } = req.body;
+  const ServiceMessage = {
+    id: Date.now(),
+    message: "your service request is accepted officer will contact you",
+  };
+
+  try {
+    await users.findOneAndUpdate(
+      { _id: userId },
+      { $push: { Notification: ServiceMessage } }
+    );
+    await services.findOneAndDelete({ _id: serviceId });
+    res.status(200).json("deleted successfully");
+  } catch (error) {
+    res.status(500).json("server error");
+  }
+};
+//onarejectingserviceReq
+exports.onRejectpoliceServices = async (req, res) => {
+  const { serviceId, userId, serviceType, date } = req.body;
+  console.log(req.body)
+  const ServiceMessage = {
+    id: Date.now(),
+    message: "your service request is rejected ",
+  };
+
+  try {
+    await officers.findOneAndUpdate(
+      { _id: userId },
+      { $push: { Notification: ServiceMessage } }
+    );
+    await pService.findOneAndDelete({ _id: serviceId });
+    res.status(200).json("deleted successfully");
+  } catch (error) {
+    res.status(500).json("server error");
+  }
+};
+
+//acceptying leave
+
+exports.onManageLeaves = async (req, res) => {
+  const { userId, _id } = req.body;
+  console.log(req.body)
+  const ServiceMessage = {
+    id: Date.now(),
+    message: "your leave request is accepted",
+  };
+
+  try {
+    await officers.findOneAndUpdate(
+      { _id: userId },
+      { $push: { Notification: ServiceMessage } }
+    );
+    await leaves.findOneAndDelete({ _id: _id });
+    res.status(200).json("deleted successfully");
+  } catch (error) {
+    res.status(500).json({ message: error });
+    console.log(error);
+  }
+};
+
+//ondelete leaves
+exports.rejectLeaves = async (req, res) => {
+  const { userId, _id } = req.body;
+  const ServiceMessage = {
+    id: Date.now(),
+    message: "your leave request is rejected",
+  };
+
+  try {
+    await officers.findOneAndUpdate(
+      { _id: userId },
+      { $push: { Notification: ServiceMessage } }
+    );
+    await leaves.findOneAndDelete({ _id: _id });
+    res.status(200).json("deleted successfully");
+  } catch (error) {
+    res.status(500).json({ message: error });
+    console.log(error);
   }
 };

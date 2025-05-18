@@ -4,6 +4,8 @@ exports.addLeave = async (req, res) => {
   const { leaveType, name, startDate, EndDate, circle, reason } = req.body;
 
   try {
+        const Id=req.userId
+
     const newLeaveReq = new leaves({
       leaveType,
       name,
@@ -11,7 +13,10 @@ exports.addLeave = async (req, res) => {
       EndDate,
       circle,
       reason,
+      userId:Id
+
     });
+
     await newLeaveReq.save();
     res.status(201).json(newLeaveReq);
   } catch (error) {
@@ -28,3 +33,7 @@ exports.getLeaves = async (req, res) => {
     res.status(500).json("server error");
   }
 };
+
+
+
+

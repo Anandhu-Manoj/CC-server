@@ -7,8 +7,8 @@ const serviceMulterMiddleWare = require("../Middleware/serviceMulterMiddleWare")
 const officerController = require("../Controllers/OfficersController");
 const criminalController = require("../Controllers/criminalControllers");
 const auth = require("../Middleware/jwtMiddleware");
-const leaveController=require('../Controllers/lController')
-const PoliceServices=require('../Controllers/pServiceController')
+const leaveController = require("../Controllers/lController");
+const PoliceServices = require("../Controllers/pServiceController");
 const router = express.Router();
 
 router.post(
@@ -21,6 +21,7 @@ router.post("/login", cController.civilianLogin);
 //service routes
 router.post(
   "/serviceRegister",
+  auth,
   serviceMulterMiddleWare.single("complaint"),
   cServices.serviceController
 );
@@ -62,42 +63,73 @@ router.delete("/Services/:id/delete", auth, cServices.deleteService);
 
 router.get("/getLoggedOfficer", auth, officerController.getSpeceficOfficer);
 
-
 //postLeaves
-router.post('/postLeaves',auth,leaveController.addLeave)
+router.post("/postLeaves", auth, leaveController.addLeave);
 
 //getLeaves
-router.get('/getAllLeaves',auth,leaveController.getLeaves)
-
+router.get("/getAllLeaves", auth, leaveController.getLeaves);
 
 //adding police services
-router.post('/postPoliceServices',auth,PoliceServices.AddServices)
+router.post("/postPoliceServices", auth, PoliceServices.AddServices);
 
 //gettingPoliceServices
-router.get('/getPoliceServices',auth,PoliceServices.getPoliceServices)
-
+router.get("/getPoliceServices", auth, PoliceServices.getPoliceServices);
 
 //notification for accepting serveces
-router.post('/acceptingPoliceServices',auth,officerController.onAcceptOfficerServices)
+router.post(
+  "/acceptingPoliceServices",
+  auth,
+  officerController.onAcceptOfficerServices
+);
 
 //clearNotification
-router.patch('/ClearingPoliceServices',auth,officerController.ClearNotification)
-
+router.patch(
+  "/ClearingPoliceServices",
+  auth,
+  officerController.ClearNotification
+);
 
 //editOfficer
-router.patch('/updateOfficer/:id',auth,officerController.editOfficer)
+router.patch("/updateOfficer/:id", auth, officerController.editOfficer);
 
 //editCriminals
-router.patch('/updateCriminals/:id',auth,multerMiddleWare.single("criminalimage"),criminalController.editCriminals)
-
+router.patch(
+  "/updateCriminals/:id",
+  auth,
+  multerMiddleWare.single("criminalimage"),
+  criminalController.editCriminals
+);
 
 //assigningcasses
-router.patch('/asignCasses/:id',auth,officerController.assignedCasses)
+router.patch("/asignCasses/:id", auth, officerController.assignedCasses);
 
+//dismissed casses
+router.patch("/dismissedcassses", auth, officerController.dismissedCasses);
 
+//getingserviceNotifivation
+router.get("/getServiceNotification", auth, cController.getNotification);
 
+//clear CivilianNotification
 
+router.patch(
+  "/ClearingCivilianNotification",
+  auth,
+  cController.ClearNotification
+);
 
+//on accepting local services
+router.patch(
+  "/onAcceptingLocalServices",
+  auth,
+  officerController.onAcceptlocalServices
+);
 
+//onaccepting
+router.patch("/onacceptingleaves", auth, officerController.onManageLeaves);
+//onReject
+router.patch("/onrejectleaves", auth, officerController.rejectLeaves);
+
+//onRejectLOcal service
+router.patch('/onRejectPoliceService',auth,officerController.onRejectpoliceServices)
 
 module.exports = router;

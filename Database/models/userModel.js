@@ -33,6 +33,9 @@ const userSchema=new mongoose.Schema({
         required:true,
         unique:true
     },
+    Notification:{
+        type:Array
+    }
 })
 
 const users=mongoose.model('users',userSchema)

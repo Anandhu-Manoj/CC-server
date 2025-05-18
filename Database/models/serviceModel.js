@@ -4,16 +4,20 @@ const serviceSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    
+  },
+
+  userId: {
+    type: String,
+    required: true,
   },
   fathersname: {
     type: String,
   },
   Date: {
-    type:String,
+    type: String,
   },
   number: {
-    type:Number,
+    type: Number,
   },
   complaint: {
     type: String,
@@ -24,9 +28,8 @@ const serviceSchema = new mongoose.Schema({
   criminalname: {
     type: String,
   },
-  relationship:{
-    type:String
-
+  relationship: {
+    type: String,
   },
   visitingreason: {
     type: String,
@@ -34,12 +37,11 @@ const serviceSchema = new mongoose.Schema({
   visitingtime: {
     type: String,
   },
-  serviceType:{
-    type:String,
-    required:true
-
-  }
+  serviceType: {
+    type: String,
+    required: true,
+  },
 });
 
-const services=mongoose.model('services',serviceSchema)
-module.exports=services
+const services = mongoose.model("services", serviceSchema);
+module.exports = services;

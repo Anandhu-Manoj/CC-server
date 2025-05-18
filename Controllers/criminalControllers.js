@@ -95,3 +95,6 @@ exports.editCriminals = async (req, res) => {
     console.log(error);
   }
 };
+
+
+
