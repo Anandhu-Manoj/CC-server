@@ -255,7 +255,7 @@ exports.onAcceptlocalServices = async (req, res) => {
 //onarejectingserviceReq
 exports.onRejectpoliceServices = async (req, res) => {
   const { serviceId, userId, serviceType, date } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   const ServiceMessage = {
     id: Date.now(),
     message: "your service request is rejected ",
@@ -277,7 +277,7 @@ exports.onRejectpoliceServices = async (req, res) => {
 
 exports.onManageLeaves = async (req, res) => {
   const { userId, _id } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   const ServiceMessage = {
     id: Date.now(),
     message: "your leave request is accepted",
@@ -316,3 +316,72 @@ exports.rejectLeaves = async (req, res) => {
     console.log(error);
   }
 };
+
+//onAppontmentBooking
+exports.notifyAppointmentStatus = async (req, res) => {
+  const { userId, appointmentId, status, customMessage } = req.body;
+
+  if (!userId || !appointmentId || !status) {
+    return res
+      .status(400)
+      .json({ message: "userId, appointmentId, and status are required" });
+  }
+
+  let message;
+  if (customMessage) {
+    message = customMessage;
+  } else {
+    message =
+      status === "booked"
+        ? "Your appointment to visit has been successfully booked."
+        : "Your appointment could not be booked.";
+  }
+
+  const Notification = {
+    id: Date.now(),
+    message,
+    appointmentId,
+    status,
+  };
+
+  try {
+    const updatedUser = await users.findOneAndUpdate(
+      { _id: userId },
+      { $push: { Notification } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await services.findOneAndDelete({ _id: appointmentId });
+
+    res
+      .status(200)
+      .json({
+        message: "Notification sent and appointment removed",
+        Notification,
+      });
+  } catch (error) {
+    console.error("Error in notifyAppointmentStatus:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+exports.onUploadProfile=async(req,res)=>{
+  const userid=req.userId;
+
+  try {
+    const Profileimage=req.file.filename
+    await officers.findOneAndUpdate({_id:userid},{$set:{proImage:Profileimage}})
+    res.status(200).json({message:"updated successfully"})
+    
+  } catch (error) {
+    res.status(500).json(error),console.log(error)
+    
+  }
+
+}
+

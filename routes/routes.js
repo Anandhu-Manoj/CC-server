@@ -131,5 +131,10 @@ router.patch("/onrejectleaves", auth, officerController.rejectLeaves);
 
 //onRejectLOcal service
 router.patch('/onRejectPoliceService',auth,officerController.onRejectpoliceServices)
+//appintment accept and reject
+router.patch("/notifyAppointmentStatus", officerController.notifyAppointmentStatus);
+
+//updatePropic
+router.patch("/updataPropic",auth,multerMiddleWare.single("profileImg"),officerController.onUploadProfile)
 
 module.exports = router;

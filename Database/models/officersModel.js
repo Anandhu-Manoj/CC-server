@@ -12,7 +12,7 @@ const officersSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique:true
+    unique: true,
   },
   password: {
     type: String,
@@ -36,10 +36,12 @@ const officersSchema = new mongoose.Schema({
   serviceperiod: {
     type: Number,
   },
-  Notification:{
-    type:Array,
-    
-  }
+  Notification: {
+    type: Array,
+  },
+  proImage: {
+    type: String,
+  },
 });
-const officers=mongoose.model('officers',officersSchema)
-module.exports=officers
+const officers = mongoose.model("officers", officersSchema);
+module.exports = officers;
