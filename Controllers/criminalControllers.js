@@ -40,8 +40,9 @@ exports.AddCriminalController = async (req, res) => {
 
 //get all criminals
 exports.getAllCriminalDetails = async (req, res) => {
+  let {search}=req.query
   try {
-    const allCriminals = await criminals.find();
+    const allCriminals = await criminals.find({criminalname:{$regex:search,$options:"i"}});
     res.status(200).json(allCriminals);
   } catch (error) {
     res.status(500).json("server error");

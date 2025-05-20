@@ -71,8 +71,9 @@ exports.addPoliceOfficer = async (req, res) => {
 //get officer Details
 
 exports.getOfficerDetails = async (req, res) => {
+  let {search}=req.query
   try {
-    const findAllofficers = await officers.find();
+    const findAllofficers = await officers.find({circleofduty:{$regex:search,$options:"i"}});
     const AllOfficers = findAllofficers.filter((a) => a.role !== "admin");
     res.status(200).json(AllOfficers);
   } catch (error) {
